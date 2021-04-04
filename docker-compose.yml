@@ -1,0 +1,29 @@
+version: '3.8'
+
+services: 
+  tomcat:
+    # https://hub.docker.com/_/tomcat
+    image: tomcat:9
+    expose: 
+      - 8080
+    environment: 
+      # nginx-proxy parameters
+      - VIRTUAL_PORT=8080
+      - VIRTUAL_HOST=jfxbridge.local
+      # Informix database credentials
+      - INFORMIX_HOST=${INFORMIX_HOST}
+      - INFORMIX_PORT=${INFORMIX_PORT}
+      - INFORMIX_DB=${INFORMIX_DB}
+      - INFORMIX_SERVER=${INFORMIX_SERVER}
+      - INFORMIX_USER=${INFORMIX_USER}
+      - INFORMIX_PASSWORD=${INFORMIX_PASSWORD}
+    volumes:
+      - ./app:/usr/local/tomcat/webapps/jfxbridge
+      # Default server.xml overridden to declare app as root.
+      - ./server.xml:/usr/local/tomcat/conf/server.xml
+
+# Custom network conf to work behind nginx-proxy
+networks:
+  default:
+    external:
+      name: nginx-proxy
