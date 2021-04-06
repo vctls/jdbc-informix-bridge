@@ -1,3 +1,4 @@
+package jfxbridge;
 
 import java.io.IOException;
 import java.io.PrintWriter;
