@@ -1,4 +1,3 @@
-package jfxbridge;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,7 +10,7 @@ import javax.servlet.http.*;
 import java.sql.*;
 import com.informix.jdbc.*;
 
-@WebServlet("/query")
+@WebServlet("")
 public class MainServlet extends HttpServlet {
 
    @Override
@@ -22,7 +21,7 @@ public class MainServlet extends HttpServlet {
       response.setCharacterEncoding("UTF-8");
       PrintWriter out = response.getWriter();
 
-      String sql = request.getParameter("sql");
+      String sql = request.getParameter("query");
 
       if (sql == null || sql.equals("")) {
          sql = "SELECT CURRENT FROM systables WHERE tabid=1;";
@@ -57,7 +56,7 @@ public class MainServlet extends HttpServlet {
          int colCount = meta.getColumnCount();
 
          // Print headers.
-         for (var i = 1; i <= colCount; i++) {
+         for (int i = 1; i <= colCount; i++) {
             out.print("\"");
             out.print(meta.getColumnName(i));
             out.print("\"");
@@ -65,12 +64,12 @@ public class MainServlet extends HttpServlet {
                out.append(";");
             }
          }
-         out.println();
 
          String strValue;
 
          // Print values.
          while (rs.next()) {
+            out.println();
             for (int col = 1; col <= colCount; col++) {
                Object value = rs.getObject(col);
                // Only print separators if column is not null.
@@ -88,7 +87,6 @@ public class MainServlet extends HttpServlet {
                   out.append(";");
                }
             }
-            out.println();
          }
 
       } catch (Exception e) {
